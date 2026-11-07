@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta Tags -->
+    <title>Photo Galaxy</title>
+    <meta name="description" content="Explore and organize your personal photos in an interactive force-directed WebGL Voronoi galaxy with tag-based clustering." />
+    <meta name="keywords" content="photo galaxy, photography, gallery, visualization, interactive, WebGL, voronoi, force-directed clustering" />
+    <meta name="author" content="Photo Galaxy" />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Photo Galaxy — A living photo universe" />
+    <meta property="og:description" content="Explore your photos in a living, force-directed WebGL galaxy. Find moments by title, place, and tag." />
+    <meta property="og:site_name" content="Photo Galaxy" />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="800" />
+    <meta property="og:image:alt" content="Photo Galaxy interactive photo visualization" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Photo Galaxy — A living photo universe" />
+    <meta name="twitter:description" content="Explore your photos in a living, force-directed WebGL galaxy. Find moments by title, place, and tag." />
+    <meta name="twitter:image:alt" content="Photo Galaxy interactive photo visualization" />
+    
+    <!-- Additional Meta -->
+    <meta name="theme-color" content="#000000" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Photo Galaxy" />
+    
+    <!-- Robots -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  </head>
+  <body class="bg-background">
+    <div id="root"></div>
+    <div id="file-protocol-notice" hidden style="position:fixed;inset:0;z-index:9999;display:none;place-content:center;gap:16px;padding:32px;background:#070707;color:#f4f4f5;font:16px/1.5 system-ui,sans-serif;text-align:center">
+      <div>
+        <h1 style="margin:0 0 8px;font-size:28px">Start Photo Galaxy from the project folder</h1>
+        <p style="margin:0 0 16px;color:#a1a1aa">This page was opened as a local file. Run the Vite server to load the gallery.</p>
+        <code style="display:inline-block;border:1px solid #333;border-radius:8px;background:#111;padding:10px 16px;color:#c4b5fd">npm run dev</code>
+        <p style="margin:16px 0 0;color:#a1a1aa">Then open <strong style="color:#fff">http://localhost:3000</strong></p>
+      </div>
+    </div>
+    <div
+      id="voroforce"
+      class="pointer-events-auto fixed inset-x-0 top-0 h-dvh w-screen"
+    >
+      <canvas class="h-full w-full pointer-events-none"></canvas>
+    </div>
+    <script>
+      if (window.location.protocol === 'file:') {
+        document.body.style.background = '#070707'
+        document.getElementById('root').hidden = true
+        document.getElementById('voroforce').hidden = true
+        const notice = document.getElementById('file-protocol-notice')
+        notice.hidden = false
+        notice.style.display = 'grid'
+      }
+    </script>
+    <script type="module" src="/app/main.tsx"></script>
+  </body>
+</html>
