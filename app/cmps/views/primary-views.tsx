@@ -3,6 +3,7 @@ import { Favorites } from './favorites'
 import { EmptyGalleryState, PhotoDetailDrawer, PhotoPreview } from './photo'
 import { HotkeysView } from './hotkeys'
 import { LowFpsAlert } from './low-fps-alert'
+import { FpsIndicator } from './fps-indicator'
 import {
   AddPhotoModal,
   EditTagsModal,
@@ -24,6 +25,7 @@ const PrimaryViews = () => (
     <PhotoPreview />
     <PhotoDetailDrawer />
     <LowFpsAlert />
+    <FpsIndicator />
     <HotkeysView />
   </>
 )

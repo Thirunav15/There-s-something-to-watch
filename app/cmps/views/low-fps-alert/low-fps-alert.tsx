@@ -5,8 +5,12 @@ import { useMediaQuery } from '../../../hooks/use-media-query'
 import { useShallowState } from '../../../store'
 import { orientation, up } from '../../../utils/mq'
 import { cn } from '../../../utils/tw'
-import { CELL_LIMIT } from '../../../vf'
-import { DEVICE_CLASS, VOROFORCE_MODE } from '../../../vf/consts'
+import {
+  CELL_LIMIT,
+  DEFAULT_CELL_LIMIT,
+  DEVICE_CLASS,
+  VOROFORCE_MODE,
+} from '../../../vf/consts'
 import { CoreSettingsWidget } from '../../common/core-settings/core-settings-widget'
 import { Modal } from '../../common/modal'
 import { Button } from '../../ui/button'
@@ -17,28 +21,37 @@ export const LowFpsAlert = () => {
 
   const {
     performanceMonitor,
+    performanceSettingsOpen,
+    setPerformanceSettingsOpen,
     ticker,
     mode,
     estimatedDeviceClass,
     setEstimatedDeviceClass,
     setAboutOpen,
     setSettingsOpen,
-    cellLimit,
+    activeCellLimit,
     savedCellLimit,
   } = useShallowState((state) => ({
     performanceMonitor: state.performanceMonitor,
+    performanceSettingsOpen: state.performanceSettingsOpen,
+    setPerformanceSettingsOpen: state.setPerformanceSettingsOpen,
     ticker: state.voroforce?.ticker,
     mode: state.mode,
     estimatedDeviceClass: state.estimatedDeviceClass,
     setEstimatedDeviceClass: state.setEstimatedDeviceClass,
     setAboutOpen: state.setAboutOpen,
     setSettingsOpen: state.setSettingsOpen,
-    cellLimit: state.userConfig.cells,
+    activeCellLimit:
+      state.config?.cells ??
+      state.cellLimit ??
+      state.userConfig.cells ??
+      DEFAULT_CELL_LIMIT,
     savedCellLimit: state.cellLimit,
   }))
 
-  const canLowerQuality =
-    (savedCellLimit ?? cellLimit ?? CELL_LIMIT.xxs) > CELL_LIMIT.xxs
+  const currentCellLimit =
+    savedCellLimit ?? activeCellLimit ?? DEFAULT_CELL_LIMIT
+  const canLowerQuality = currentCellLimit > CELL_LIMIT.xxs
   const warnLimit = !canLowerQuality ? 1 : 2
 
   const [isOpen, setIsOpen] = useState(false)
@@ -89,9 +102,13 @@ export const LowFpsAlert = () => {
 
   const close = useCallback(() => {
     setIsOpen(false)
-    if (!ticker) return
-    ticker.unfreeze()
-  }, [ticker])
+    setPerformanceSettingsOpen(false)
+    ticker?.unfreeze()
+  }, [setPerformanceSettingsOpen, ticker])
+
+  useEffect(() => {
+    if (performanceSettingsOpen) ticker?.freeze()
+  }, [performanceSettingsOpen, ticker])
 
   useEffect(() => {
     if (performanceMonitor && openedCount < warnLimit) {
@@ -112,7 +129,7 @@ export const LowFpsAlert = () => {
     <Modal
       rootProps={{
         direction: landscape ? 'left' : 'bottom',
-        open: isOpen,
+        open: isOpen || performanceSettingsOpen,
         onClose: close,
       }}
       contentProps={{
@@ -132,33 +149,28 @@ export const LowFpsAlert = () => {
         <div className='flex flex-col gap-2 pt-4'>
           <div className='flex items-center gap-2 font-semibold text-xl text-zinc-900 dark:text-white'>
             <TriangleAlert className='h-5 w-5 text-amber-500 ' />
-            <div>Low FPS detected</div>
+            <div>
+              {performanceSettingsOpen
+                ? 'Performance settings'
+                : 'Low FPS detected'}
+            </div>
           </div>
           <p className='inline-flex pb-2 text-base text-zinc-600 max-md:pb-2 dark:text-zinc-300'>
             <span className='leading-none md:hidden'>
-              This page is best viewed on a larger device like a desktop or
-              laptop.
+              {performanceSettingsOpen
+                ? 'Choose a render limit. Fewer cells can improve frame rate while retaining the same Voronoi style.'
+                : 'This page is best viewed on a larger device like a desktop or laptop.'}
             </span>
-            <span
-              className={cn('max-md:hidden', {
-                hidden: canLowerQuality,
-              })}
-            >
-              Lower the settings?
-            </span>
-            <span
-              className={cn('max-md:hidden', {
-                hidden: !canLowerQuality,
-              })}
-            >
-              You're already using the lowest settings.
+            <span className='max-md:hidden'>
+              {performanceSettingsOpen
+                ? 'Choose a render limit. Fewer cells can improve frame rate while retaining the same Voronoi style.'
+                : canLowerQuality
+                  ? 'Lower the settings?'
+                  : "You're already using the lowest settings."}
             </span>
           </p>
         </div>
-        <CoreSettingsWidget
-          defaultCellLimit={CELL_LIMIT.xxs}
-          onSubmit={() => window.location.reload()}
-        />
+        <CoreSettingsWidget onSubmit={() => window.location.reload()} />
         <div className='flex w-full flex-row justify-end gap-3 pt-4 md:gap-6 md:pt-6'>
           <Button variant='outline' onClick={close}>
             Close

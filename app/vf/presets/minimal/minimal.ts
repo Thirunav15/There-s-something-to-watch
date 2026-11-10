@@ -1,6 +1,6 @@
 import { mediaConfigWithUncompressedSingleVersion } from '../../config/media'
 
 export default {
-  cells: 50000,
+  cells: 5000,
   media: mediaConfigWithUncompressedSingleVersion,
 }

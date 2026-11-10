@@ -23,8 +23,11 @@ export function DeviceClassSelector({
       }
       return deviceClass.id !== DEVICE_CLASS.mobile
     }).map((deviceClass) => {
+      const cellCount = deviceClass.recommendedCellLimit?.toLocaleString()
       return {
-        label: deviceClass.name,
+        label: cellCount
+          ? `${deviceClass.name} · ${cellCount} cells`
+          : deviceClass.name,
         value: String(deviceClass.id),
         addon:
           estimatedValue === deviceClass.id ? (

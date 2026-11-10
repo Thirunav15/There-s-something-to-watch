@@ -71,57 +71,42 @@ export const PRESET_ITEMS: PresetItems = [
 ]
 
 export enum CELL_LIMIT {
-  xxs = 5000,
-  xs = 10000,
-  sm = 25000,
-  md = 50000,
-  lg = 100000,
+  xxs = 2000,
+  xs = 3000,
+  sm = 4000,
+  md = 5000,
 }
 
+export const DEFAULT_CELL_LIMIT = CELL_LIMIT.md
+export const MAX_PHOTO_COUNT = 5000
+
 export const CELL_LIMIT_ITEMS = [
-  {
-    value: CELL_LIMIT.xxs,
-    label: '5,000',
-  },
-  {
-    value: CELL_LIMIT.xs,
-    label: '10,000',
-    recommendedDeviceClass: DEVICE_CLASS.low,
-  },
-  {
-    value: CELL_LIMIT.sm,
-    label: '25,000',
-    recommendedDeviceClass: DEVICE_CLASS.low,
-  },
-  {
-    value: CELL_LIMIT.md,
-    label: '50,000',
-    recommendedDeviceClass: DEVICE_CLASS.mid,
-  },
-  {
-    value: CELL_LIMIT.lg,
-    label: '100,000',
-    recommendedDeviceClass: DEVICE_CLASS.high,
-    doNotRecommend: true,
-  },
+  { value: CELL_LIMIT.xxs, label: '2,000' },
+  { value: CELL_LIMIT.xs, label: '3,000' },
+  { value: CELL_LIMIT.sm, label: '4,000' },
+  { value: CELL_LIMIT.md, label: '5,000' },
 ]
 
 export const DEVICE_CLASS_ITEMS = [
   {
     id: DEVICE_CLASS.mobile,
     name: '📱Mobile',
+    recommendedCellLimit: CELL_LIMIT.xxs,
   },
   {
     id: DEVICE_CLASS.low,
     name: '🥔 Potato',
+    recommendedCellLimit: CELL_LIMIT.xxs,
   },
   {
     id: DEVICE_CLASS.mid,
     name: '😐 Mid-range',
+    recommendedCellLimit: CELL_LIMIT.sm,
   },
   {
     id: DEVICE_CLASS.high,
     name: '💪 High-end',
+    recommendedCellLimit: CELL_LIMIT.md,
   },
 ]
 

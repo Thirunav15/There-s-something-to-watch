@@ -22,16 +22,27 @@ export type UseKeyPressOptions = {
 const inputTags = ['INPUT', 'SELECT', 'TEXTAREA']
 
 export function isInputDOMNode(event: KeyboardEvent): boolean {
-  // using composed path for handling shadow dom
-  const target = (event.composedPath?.()?.[0] || event.target) as Element | null
-  if (target?.nodeType !== 1 /* Node.ELEMENT_NODE */) return false
+  // Check the full path for shadow DOM and nested rich text controls.
+  const path = event.composedPath?.() ?? [event.target]
+  const target = path.find(
+    (node): node is Element =>
+      typeof node === 'object' &&
+      node !== null &&
+      'nodeType' in node &&
+      (node as Node).nodeType === 1,
+  )
+  if (!target) return false
 
   const isInput =
     inputTags.includes(target.nodeName) ||
-    target.hasAttribute('contenteditable')
+    (target as HTMLElement).isContentEditable ||
+    !!target.closest('[contenteditable="true"], [role="textbox"]')
 
-  // when an input field is focused we don't want to trigger deletion or movement of nodes
-  return isInput || !!target.closest('.nokey')
+  // When a text field is focused, shortcuts must not consume its keystrokes.
+  return (
+    isInput ||
+    path.some((node) => node instanceof Element && !!node.closest('.nokey'))
+  )
 }
 
 const defaultDoc = typeof document !== 'undefined' ? document : null

@@ -1,10 +1,10 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 
 import { useShallowState } from '../../../store'
 import { isDefined } from '../../../utils/misc'
 import { cn } from '../../../utils/tw'
 import { VOROFORCE_PRESET } from '../../../vf'
-import { CELL_LIMIT } from '../../../vf/consts'
+import { CELL_LIMIT, DEFAULT_CELL_LIMIT } from '../../../vf/consts'
 import { Button, type ButtonProps } from '../../ui/button'
 import { AnimateDimensionsChange } from '../animate-dimensions-change'
 import { FadeTransition } from '../fade-transition'
@@ -25,22 +25,28 @@ export function CoreSettingsWidget({
   submitVisibility?: 'dirty' | 'always'
   defaultCellLimit?: CELL_LIMIT
 }) {
-  const {
-    setStorePreset,
-    setStoreCellLimit,
-    storeCellLimit,
-  } = useShallowState((state) => ({
-    setStorePreset: state.setPreset,
-    setStoreCellLimit: state.setCellLimit,
-    storeCellLimit: state.cellLimit,
-  }))
+  const { setStorePreset, setStoreCellLimit, storeCellLimit } = useShallowState(
+    (state) => ({
+      setStorePreset: state.setPreset,
+      setStoreCellLimit: state.setCellLimit,
+      storeCellLimit: state.cellLimit,
+    }),
+  )
 
   const [cellLimit, setCellLimit] = useState<CELL_LIMIT | undefined>(
-    defaultCellLimit ?? storeCellLimit ?? CELL_LIMIT.xxs,
+    defaultCellLimit ?? storeCellLimit ?? DEFAULT_CELL_LIMIT,
   )
 
   const [isDirty, setIsDirty] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [hasUserSelectedCellLimit, setHasUserSelectedCellLimit] =
+    useState(false)
+
+  useEffect(() => {
+    if (defaultCellLimit !== undefined && !hasUserSelectedCellLimit) {
+      setCellLimit(defaultCellLimit)
+    }
+  }, [defaultCellLimit, hasUserSelectedCellLimit])
 
   return (
     <AnimateDimensionsChange
@@ -52,6 +58,7 @@ export function CoreSettingsWidget({
         className='max-md:hidden'
         value={cellLimit}
         onValueChange={(value: CELL_LIMIT) => {
+          setHasUserSelectedCellLimit(true)
           setCellLimit(value)
           setIsDirty(value !== storeCellLimit)
         }}
@@ -68,7 +75,9 @@ export function CoreSettingsWidget({
             if (isSubmitted) return
             setIsSubmitted(true)
             setStorePreset(VOROFORCE_PRESET.minimal)
-            setStoreCellLimit(isDefined(cellLimit) ? cellLimit : CELL_LIMIT.xxs)
+            setStoreCellLimit(
+              isDefined(cellLimit) ? cellLimit : DEFAULT_CELL_LIMIT,
+            )
             onSubmit?.()
           }}
           size='lg'

@@ -60,6 +60,8 @@ const createMockState = (overrides: Partial<StoreState> = {}): StoreState => ({
     transitioning: new Map() as ConfigUniforms,
   },
   setPerformanceMonitor: () => {},
+  performanceSettingsOpen: false,
+  setPerformanceSettingsOpen: () => {},
 
   // PhotoData Slice defaults
   photos: [],
@@ -68,15 +70,18 @@ const createMockState = (overrides: Partial<StoreState> = {}): StoreState => ({
   setPhotos: () => {},
   setActivePhoto: () => {},
   addPhoto: () => ({ id: 0, title: '', imageUrl: '', tags: [], date: '' }),
+  addPhotos: () => [],
   deletePhoto: () => {},
   deletePhotos: () => {},
   updatePhotoTags: () => {},
+  updatePhotoDetails: () => {},
   searchQuery: '',
   setSearchQuery: () => {},
   setActiveFilterTag: () => {},
   uploadModalOpen: false,
   setUploadModalOpen: () => {},
   setPendingUploadFile: () => {},
+  setPendingUploadBatch: () => {},
   editTagsModalOpen: false,
   setEditTagsModalOpen: () => {},
 

@@ -17,9 +17,16 @@ export interface PhotoDataSlice {
   activePhoto?: PhotoNode
   setActivePhoto: (photo?: PhotoNode) => void
   addPhoto: (newPhotoData: Omit<PhotoNode, 'id'>) => PhotoNode
+  addPhotos: (newPhotosData: Omit<PhotoNode, 'id'>[]) => PhotoNode[]
   deletePhoto: (id: number) => void
   deletePhotos: (ids: number[]) => void
   updatePhotoTags: (id: number, tags: string[]) => void
+  updatePhotoDetails: (
+    id: number,
+    details: Partial<
+      Pick<PhotoNode, 'title' | 'caption' | 'date' | 'location' | 'tags'>
+    >,
+  ) => void
 
   // Search & Filtering
   searchQuery: string
@@ -32,11 +39,12 @@ export interface PhotoDataSlice {
   setUploadModalOpen: (open: boolean) => void
   pendingUploadFile?: File
   setPendingUploadFile: (file?: File) => void
+  pendingUploadBatch?: File[]
+  setPendingUploadBatch: (files?: File[]) => void
 
   // Edit Tags UI State
   editTagsModalOpen: boolean
   setEditTagsModalOpen: (open: boolean) => void
-
 }
 
 export const createPhotoDataSlice: StateCreator<
@@ -86,6 +94,30 @@ export const createPhotoDataSlice: StateCreator<
       })
       return newPhoto
     },
+    addPhotos: (newPhotosData: Omit<PhotoNode, 'id'>[]) => {
+      if (newPhotosData.length === 0) return []
+
+      const current = get().photos
+      const nextId =
+        current.length > 0
+          ? Math.max(...current.map((p) => Number(p.id) || 0)) + 1
+          : 1
+      const nextCellId =
+        current.reduce(
+          (max, photo, index) => Math.max(max, photo.cellId ?? index),
+          -1,
+        ) + 1
+      const newPhotos = newPhotosData.map((photo, index) => ({
+        ...photo,
+        id: nextId + index,
+        cellId: nextCellId + index,
+      }))
+      const updated = [...current, ...newPhotos]
+
+      persistPhotos(updated)
+      set({ photos: updated, activePhoto: newPhotos[newPhotos.length - 1] })
+      return newPhotos
+    },
     favoritePhotoIds: loadFavoritePhotoIds(),
     toggleFavoritePhoto: (id: number) => {
       const ids = get().favoritePhotoIds
@@ -133,6 +165,17 @@ export const createPhotoDataSlice: StateCreator<
         activePhoto: active?.id === id ? { ...active, tags } : active,
       })
     },
+    updatePhotoDetails: (id, details) => {
+      const updated = get().photos.map((photo) =>
+        photo.id === id ? { ...photo, ...details } : photo,
+      )
+      persistPhotos(updated)
+      const active = get().activePhoto
+      set({
+        photos: updated,
+        activePhoto: active?.id === id ? { ...active, ...details } : active,
+      })
+    },
 
     searchQuery: '',
     setSearchQuery: (searchQuery: string) => set({ searchQuery }),
@@ -144,10 +187,12 @@ export const createPhotoDataSlice: StateCreator<
     pendingUploadFile: undefined,
     setPendingUploadFile: (pendingUploadFile?: File) =>
       set({ pendingUploadFile }),
+    pendingUploadBatch: undefined,
+    setPendingUploadBatch: (pendingUploadBatch?: File[]) =>
+      set({ pendingUploadBatch }),
 
     editTagsModalOpen: false,
     setEditTagsModalOpen: (editTagsModalOpen: boolean) =>
       set({ editTagsModalOpen }),
-
   }
 }

@@ -70,69 +70,68 @@ export const PhotoDetailActions = ({
   return (
     <div
       className={cn(
-        'relative flex flex-col items-stretch gap-1.5 border-border/60 border-t bg-background/95 px-3 py-3 backdrop-blur-xl md:px-4',
+        'font-gallery relative flex flex-col gap-3 border-t border-white/10 bg-[#181818]/95 px-4 py-4 backdrop-blur-xl sm:px-5',
         className,
       )}
     >
-      {/* Primary Actions: Download & Edit Tags */}
-      <div className='flex flex-col items-stretch gap-1.5'>
+      <div className='grid grid-cols-2 gap-2'>
         <Button
-          variant='outline'
-          size='sm'
-          className='w-full justify-start'
-          onClick={() => toggleFavoritePhoto(activePhoto.id)}
-          aria-pressed={isFavorite}
-        >
-          <Heart
-            className={`mr-2 size-4 ${isFavorite ? 'fill-rose-500 text-rose-500' : ''}`}
-          />
-          {isFavorite ? 'Favorited' : 'Favorite'}
-        </Button>
-        <Button
-          variant='default'
-          size='sm'
+          type='button'
           onClick={handleDownload}
           disabled={downloading}
-          className='w-full cursor-pointer justify-start bg-indigo-600 text-white shadow-indigo-600/20 shadow-md hover:bg-indigo-500'
+          className='col-span-2 h-11 w-full cursor-pointer justify-center rounded-lg bg-white font-semibold text-black shadow-none transition-colors duration-300 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70'
         >
-          {downloading ? (
-            <Loader2 className='mr-2 size-4 animate-spin' />
-          ) : (
-            <Download className='mr-2 size-4' />
-          )}
+          {downloading ? <Loader2 className='animate-spin' /> : <Download />}
           Download Photo
         </Button>
 
         <Button
           variant='outline'
-          size='sm'
-          onClick={() => setEditTagsModalOpen(true)}
-          className='w-full cursor-pointer justify-start border-border/80 hover:bg-muted/50'
+          type='button'
+          onClick={() => toggleFavoritePhoto(activePhoto.id)}
+          aria-pressed={isFavorite}
+          className='h-10 w-full cursor-pointer justify-center gap-2 rounded-lg border-white/10 bg-white/[0.03] px-3 text-sm text-foreground/85 shadow-none transition-colors duration-300 hover:border-white/20 hover:bg-white/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50'
         >
-          <Edit3 className='mr-2 size-4 text-indigo-400' />
-          Edit Tags
+          <Heart
+            className={
+              isFavorite
+                ? 'fill-rose-400 text-rose-400'
+                : 'text-muted-foreground'
+            }
+          />
+          {isFavorite ? 'Favorited' : 'Favorite'}
         </Button>
-
         <Button
-          variant='ghost'
-          size='sm'
-          onClick={handleDelete}
-          className='w-full cursor-pointer justify-start text-rose-400 hover:bg-rose-500/10 hover:text-rose-300'
+          variant='outline'
+          type='button'
+          onClick={() => setEditTagsModalOpen(true)}
+          className='h-10 w-full cursor-pointer justify-center gap-2 rounded-lg border-white/10 bg-white/[0.03] px-3 text-sm text-foreground/85 shadow-none transition-colors duration-300 hover:border-white/20 hover:bg-white/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50'
         >
-          <Trash2 className='mr-2 size-4' />
+          <Edit3 className='text-muted-foreground' />
+          Edit Details
+        </Button>
+      </div>
+
+      <div className='border-t border-white/10 pt-3'>
+        <Button
+          type='button'
+          variant='ghost'
+          onClick={handleDelete}
+          className='h-10 w-full cursor-pointer justify-start gap-2 rounded-lg bg-rose-500/[0.06] px-3 text-sm font-medium text-rose-300 shadow-none transition-colors duration-300 hover:bg-rose-500/10 hover:text-rose-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/60'
+        >
+          <Trash2 className='text-rose-300' />
           Delete from Galaxy
         </Button>
       </div>
 
-      {/* Close button */}
-      <div className='pt-1'>
+      <div className='-mt-1'>
         <Button
+          type='button'
           variant='outline'
-          size='sm'
           onClick={handleClose}
-          className='w-full cursor-pointer justify-start'
+          className='h-9 w-full cursor-pointer justify-center gap-2 rounded-lg border-transparent bg-transparent text-sm text-muted-foreground shadow-none transition-colors duration-300 hover:border-white/10 hover:bg-white/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50'
         >
-          <X className='mr-1.5 size-4' />
+          <X className='size-4' />
           Close
         </Button>
       </div>

@@ -11,6 +11,7 @@ import {
 import { selectIsSelectMode, useShallowState } from '@/store'
 import type { DialogProps } from 'vaul'
 import { useMediaQuery } from '@/hooks/use-media-query'
+import { isInputDOMNode } from '@/hooks/use-key-press'
 import { down, orientation } from '@/utils/mq'
 import { cn } from '@/utils/tw'
 import type { VoroforceCell } from '@/vf'
@@ -37,7 +38,9 @@ export const PhotoDetailDrawer = () => {
   const [direction, setDirection] = useState(getDefaultDirection(isLandscape))
   const [mountContent, setMountContent] = useState(false)
   const [freezePhoto, setFreezePhoto] = useState(false)
-  const heldArrowTimersRef = useRef(new Map<string, ReturnType<typeof setTimeout>>())
+  const heldArrowTimersRef = useRef(
+    new Map<string, ReturnType<typeof setTimeout>>(),
+  )
   const longPressArrowKeysRef = useRef(new Set<string>())
   const photoRef = useRef<PhotoNode>(undefined)
   const voroforceCellRef = useRef<VoroforceCell>(undefined)
@@ -101,20 +104,14 @@ export const PhotoDetailDrawer = () => {
     if (!open) return
 
     const clearHeldKeys = () => {
-      for (const timer of heldArrowTimersRef.current.values()) clearTimeout(timer)
+      for (const timer of heldArrowTimersRef.current.values())
+        clearTimeout(timer)
       heldArrowTimersRef.current.clear()
       longPressArrowKeysRef.current.clear()
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target
-      if (
-        target instanceof HTMLElement &&
-        (target.isContentEditable ||
-          ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))
-      ) {
-        return
-      }
+      if (isInputDOMNode(event)) return
 
       if (event.key === 'Escape') {
         if (editTagsModalOpen || addCustomLinkTypeOpen) return
@@ -148,7 +145,8 @@ export const PhotoDetailDrawer = () => {
           : -1
         if (currentIndex >= 0 && photos.length > 1) {
           const offset = event.key === 'ArrowRight' ? 1 : -1
-          const nextIndex = (currentIndex + offset + photos.length) % photos.length
+          const nextIndex =
+            (currentIndex + offset + photos.length) % photos.length
           setFreezePhoto(false)
           setActivePhoto(photos[nextIndex])
         }
@@ -243,7 +241,7 @@ export const PhotoDetailDrawer = () => {
       }}
       innerContentProps={{
         className:
-          'relative z-40 flex max-h-[min(85vh,44rem)] flex-col overflow-y-auto',
+          'relative z-40 flex h-[min(85dvh,44rem)] min-h-0 flex-col overflow-hidden landscape:lg:!h-[min(85dvh,44rem)]',
       }}
       footer={
         mountContent ? (
@@ -261,8 +259,16 @@ export const PhotoDetailDrawer = () => {
           'max-md:bg-background max-md:-translate-y-[150%] max-md:h-1.5 lg:bg-transparent lg:backdrop-blur-lg',
       }}
       additional={null}
+      disableVoroforceKeyboardControls={editTagsModalOpen}
     >
-      <Suspense>{mountContent && <PhotoView photo={photo} />}</Suspense>
+      <Suspense>
+        {mountContent && (
+          <PhotoView
+            photo={photo}
+            className='min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain'
+          />
+        )}
+      </Suspense>
     </Modal>
   )
 }

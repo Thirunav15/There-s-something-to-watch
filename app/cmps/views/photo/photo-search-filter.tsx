@@ -106,7 +106,7 @@ export const PhotoSearchFilter = () => {
   return (
     <div
       ref={containerRef}
-      className={`pointer-events-none fixed top-4 right-4 z-40 flex flex-col items-end gap-2.5 transition-all duration-200 ${searchOpen ? 'w-[calc(100vw-2rem)] max-w-md md:w-96' : 'w-11'}`}
+      className={`font-gallery pointer-events-none fixed top-4 right-4 z-40 flex flex-col items-end gap-3 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:top-6 sm:right-6 ${searchOpen ? 'w-[calc(100vw-2rem)] max-w-sm md:w-96' : 'w-12'}`}
     >
       {!searchOpen ? (
         <button
@@ -116,22 +116,22 @@ export const PhotoSearchFilter = () => {
           onClick={() => {
             setSearchOpen(true)
           }}
-          className='pointer-events-auto flex size-11 items-center justify-center rounded-full border border-white/15 bg-background/85 text-foreground shadow-xl backdrop-blur-xl transition hover:border-indigo-400/50 hover:text-indigo-300'
+          className='pointer-events-auto flex size-12 items-center justify-center rounded-full border border-white/10 bg-[#181818]/90 text-foreground shadow-lg backdrop-blur-xl transition-colors duration-300 hover:border-white/25 hover:bg-[#272727] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70'
         >
           <Search className='size-5' />
         </button>
       ) : (
         <>
           {/* Search Input Box */}
-          <div className='pointer-events-auto flex w-full items-center rounded-2xl border border-white/15 bg-background/85 shadow-2xl backdrop-blur-xl transition-all focus-within:border-indigo-500/60 focus-within:ring-2 focus-within:ring-indigo-500/20'>
-            <Search className='ml-3.5 size-4 shrink-0 text-muted-foreground' />
+          <div className='pointer-events-auto flex w-full items-center rounded-2xl border border-white/10 bg-[#181818]/95 shadow-xl backdrop-blur-xl transition-colors duration-300 focus-within:border-white/30 focus-within:ring-2 focus-within:ring-white/10'>
+            <Search className='ml-4 size-4 shrink-0 text-muted-foreground' />
             <Input
               autoFocus
               type='text'
               placeholder='Search photos by title, tag, or location...'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className='h-11 min-w-0 border-0 bg-transparent px-3 text-sm placeholder:text-muted-foreground/70 focus-visible:ring-0 focus-visible:ring-offset-0'
+              className='h-12 min-w-0 border-0 bg-transparent px-3 text-sm placeholder:text-muted-foreground/70 focus-visible:ring-0 focus-visible:ring-offset-0'
             />
             {favoriteCount > 0 && (
               <button
@@ -168,14 +168,14 @@ export const PhotoSearchFilter = () => {
           </div>
 
           {/* Filter Tag Pills */}
-          <div className='no-scrollbar pointer-events-auto flex w-full items-center gap-1.5 overflow-x-auto px-0.5 py-0.5'>
+          <div className='no-scrollbar pointer-events-auto flex w-full items-center gap-2 overflow-x-auto px-0.5 py-1'>
         <button
           type='button'
           onClick={() => handleTagClick('All')}
           className={`cursor-pointer whitespace-nowrap rounded-full border px-3 py-1 font-medium text-xs transition-all ${
             !activeFilterTag || activeFilterTag === 'All'
-              ? 'border-foreground bg-foreground text-background shadow-sm'
-              : 'border-white/10 bg-background/70 text-muted-foreground backdrop-blur-md hover:border-white/30'
+              ? 'border-white bg-white text-black shadow-sm'
+              : 'border-white/10 bg-[#181818]/85 text-muted-foreground backdrop-blur-md hover:border-white/25 hover:text-foreground'
           }`}
         >
           All ({photos.length})
@@ -193,8 +193,8 @@ export const PhotoSearchFilter = () => {
               onClick={() => handleTagClick(tag)}
               className={`cursor-pointer whitespace-nowrap rounded-full border px-3 py-1 font-medium text-xs transition-all ${
                 isSelected
-                  ? 'border-indigo-500 bg-indigo-600 text-white shadow-indigo-500/30 shadow-sm'
-                  : 'border-white/10 bg-background/70 text-muted-foreground backdrop-blur-md hover:border-white/30'
+                  ? 'border-white bg-white text-black shadow-sm'
+                  : 'border-white/10 bg-[#181818]/85 text-muted-foreground backdrop-blur-md hover:border-white/25 hover:text-foreground'
               }`}
             >
               {tag} ({count})
@@ -207,7 +207,7 @@ export const PhotoSearchFilter = () => {
 
       {/* Live Search Results Dropdown */}
       {searchOpen && searchQuery.trim().length > 0 && (
-        <div className='pointer-events-auto flex max-h-72 flex-col gap-1 overflow-y-auto rounded-2xl border border-white/15 bg-background/90 p-2 shadow-2xl backdrop-blur-2xl'>
+        <div className='pointer-events-auto flex max-h-72 flex-col gap-1 overflow-y-auto rounded-2xl border border-white/10 bg-[#181818]/95 p-2 shadow-xl backdrop-blur-2xl'>
           <div className='flex items-center justify-between px-2.5 py-1 font-semibold text-[11px] text-muted-foreground uppercase tracking-wider'>
             <span>
               {filteredPhotos.length}{' '}

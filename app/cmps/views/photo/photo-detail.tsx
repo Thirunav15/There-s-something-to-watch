@@ -14,7 +14,7 @@ export const PhotoDetail = ({
 
   return (
     <div
-      className={cn('relative flex w-full flex-col overflow-hidden', className)}
+      className={cn('font-gallery relative flex w-full flex-col overflow-hidden', className)}
     >
       {/* High-Resolution Photo Preview */}
       <div className='group relative flex max-h-[min(38vh,16rem)] min-h-40 w-full shrink-0 items-center justify-center overflow-hidden bg-black/60'>
@@ -28,23 +28,23 @@ export const PhotoDetail = ({
       </div>
 
       {/* Photo Information & Metadata */}
-      <div className='flex min-w-0 flex-col gap-2.5 bg-background px-3 py-3 md:px-4'>
+      <div className='flex min-w-0 flex-col gap-3 bg-background px-4 py-4 md:px-5 md:py-5'>
         {/* Title & Location/Date Bar */}
         <div className='flex flex-col gap-2'>
-          <h2 className='break-words font-bold text-lg text-foreground tracking-tight md:text-xl'>
+          <h2 className='break-words font-semibold text-xl text-foreground tracking-tight md:text-2xl'>
             {activePhoto.title}
           </h2>
 
-          <div className='flex flex-wrap items-center gap-2 text-muted-foreground text-xs'>
+          <div className='flex flex-wrap items-center gap-2 text-muted-foreground text-sm'>
             {activePhoto.location && (
-              <span className='flex items-center gap-1.5 rounded-md border border-rose-500/20 bg-rose-500/10 px-2.5 py-1 font-medium text-rose-300'>
-                <MapPin className='size-3.5 shrink-0 text-rose-400' />
+              <span className='flex min-w-0 items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-medium text-foreground/80'>
+                <MapPin className='size-4 shrink-0 text-muted-foreground' />
                 {activePhoto.location}
               </span>
             )}
             {activePhoto.date && (
-              <span className='flex items-center gap-1.5 rounded-md border border-indigo-500/20 bg-indigo-500/10 px-2.5 py-1 font-medium text-indigo-300'>
-                <Calendar className='size-3.5 shrink-0 text-indigo-400' />
+              <span className='flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-medium text-foreground/80'>
+                <Calendar className='size-4 shrink-0 text-muted-foreground' />
                 {activePhoto.date}
               </span>
             )}
@@ -52,10 +52,10 @@ export const PhotoDetail = ({
         </div>
 
         {activePhoto.tags?.length > 0 && (
-          <div className='flex flex-wrap gap-1.5'>
+          <div className='flex flex-wrap gap-2'>
             {activePhoto.tags.map((tag: string) => (
-              <Badge key={tag} className='border border-white/15 bg-white/5 px-2 py-0.5 text-xs text-foreground/80'>
-                <Tag className='mr-1 size-3 text-indigo-400' />
+              <Badge key={tag} className='border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-foreground/80'>
+                <Tag className='mr-1 size-3 text-muted-foreground' />
                 {tag}
               </Badge>
             ))}
@@ -64,8 +64,8 @@ export const PhotoDetail = ({
 
         {/* Caption */}
         {activePhoto.caption && (
-          <div className='rounded-lg border border-border/60 bg-muted/20 p-3'>
-            <p className='text-foreground/90 text-sm leading-relaxed'>
+          <div className='rounded-xl border border-white/10 bg-white/[0.03] p-4'>
+            <p className='text-foreground/85 text-sm leading-relaxed'>
               {activePhoto.caption}
             </p>
           </div>

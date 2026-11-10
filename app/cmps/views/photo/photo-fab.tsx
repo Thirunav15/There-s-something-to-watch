@@ -19,12 +19,14 @@ export const PhotoFloatingActionOverlay = () => {
   const {
     setUploadModalOpen,
     setPendingUploadFile,
+    setPendingUploadBatch,
     hasPhotos,
     photos,
     deletePhotos,
   } = useShallowState((state) => ({
       setUploadModalOpen: state.setUploadModalOpen,
       setPendingUploadFile: state.setPendingUploadFile,
+      setPendingUploadBatch: state.setPendingUploadBatch,
       hasPhotos: state.photos.length > 0,
       photos: state.photos,
       deletePhotos: state.deletePhotos,
@@ -33,7 +35,9 @@ export const PhotoFloatingActionOverlay = () => {
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files && files.length > 0) {
-      setPendingUploadFile(files[0])
+      const selectedFiles = Array.from(files)
+      setPendingUploadFile(selectedFiles.length === 1 ? selectedFiles[0] : undefined)
+      setPendingUploadBatch(selectedFiles.length > 1 ? selectedFiles : undefined)
       setUploadModalOpen(true)
       e.target.value = ''
     }
@@ -66,15 +70,16 @@ export const PhotoFloatingActionOverlay = () => {
         ref={fileInputRef}
         type='file'
         accept='image/*'
+        multiple
         onChange={handleFileSelect}
         className='hidden'
       />
       {hasPhotos && (
-        <div className='pointer-events-none fixed right-4 bottom-4 z-40 flex items-center overflow-hidden rounded-full border border-white/20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-2xl shadow-indigo-600/30 md:right-6 md:bottom-6'>
+        <div className='font-gallery pointer-events-none fixed right-4 bottom-4 z-40 flex items-center overflow-hidden rounded-full border border-white/15 bg-[#181818]/95 shadow-xl shadow-black/30 backdrop-blur-xl md:right-6 md:bottom-6'>
           <Button
             type='button'
             onClick={() => fileInputRef.current?.click()}
-            className='pointer-events-auto flex h-10 cursor-pointer items-center gap-2 rounded-none border-0 bg-transparent px-4 font-semibold text-xs text-white shadow-none transition-colors hover:bg-white/10'
+            className='pointer-events-auto flex h-9 cursor-pointer items-center gap-2 rounded-none border-0 bg-transparent px-3 font-semibold text-sm text-white shadow-none transition-colors duration-300 hover:bg-white/10 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80 sm:px-4'
           >
             <ImagePlus className='size-4' />
             <span>+ Add Photo</span>
@@ -86,7 +91,7 @@ export const PhotoFloatingActionOverlay = () => {
               setSelectedIds([])
               setManageOpen(true)
             }}
-            className='pointer-events-auto h-10 cursor-pointer gap-1.5 rounded-none border-0 border-l border-l-white/25 bg-transparent px-3 text-xs text-white shadow-none hover:bg-white/10 hover:text-white'
+            className='pointer-events-auto h-9 cursor-pointer gap-1.5 rounded-none border-0 border-l border-l-white/15 bg-transparent px-3 font-semibold text-sm text-white shadow-none transition-colors duration-300 hover:bg-white/10 hover:text-white focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80'
           >
             <ListChecks className='size-3.5' />
             <span>Manage</span>

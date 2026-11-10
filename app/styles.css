@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @custom-variant light (&:is(.light *));
@@ -7,6 +8,10 @@
   @media (any-hover: hover) and (any-pointer: fine) {
     @slot
   }
+}
+
+.font-gallery {
+  font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
 :root {
   --background: hsl(0 0% 3.9%);

@@ -3,17 +3,29 @@ import { useShallowState } from '../../../store'
 import { isDefined } from '../../../utils/misc'
 import { cn } from '../../../utils/tw'
 import { VOROFORCE_MODE } from '../../../vf'
-import { OBSCURE_VISUAL_DEFECTS } from '../../../vf/consts'
+import {
+  DEFAULT_CELL_LIMIT,
+  DEVICE_CLASS_ITEMS,
+  OBSCURE_VISUAL_DEFECTS,
+} from '../../../vf/consts'
 import { CoreSettingsWidget } from '../../common/core-settings/core-settings-widget'
 import { DeviceClassWidget } from '../../common/device-class/device-class-widget'
 import { FadeTransition } from '../../common/fade-transition'
 import { SmallScreenWarning } from '../../common/small-screen-warning'
 
 export const Intro = () => {
-  const { preset, hasDeviceClass } = useShallowState((state) => ({
-    preset: state.preset,
-    hasDeviceClass: isDefined(state.deviceClass),
-  }))
+  const { preset, hasDeviceClass, recommendedCellLimit } = useShallowState(
+    (state) => {
+      const deviceClass = state.deviceClass ?? state.estimatedDeviceClass
+      return {
+        preset: state.preset,
+        hasDeviceClass: isDefined(state.deviceClass),
+        recommendedCellLimit:
+          DEVICE_CLASS_ITEMS.find((item) => item.id === deviceClass)
+            ?.recommendedCellLimit ?? DEFAULT_CELL_LIMIT,
+      }
+    },
+  )
 
   const [initialPreset] = useState(preset)
 
@@ -22,7 +34,7 @@ export const Intro = () => {
   return (
     <FadeTransition
       className={cn(
-        'fixed inset-x-0 top-0 z-60 flex h-dvh w-full justify-center bg-background px-12 duration-700',
+        'fixed inset-0 z-60 flex h-dvh w-full justify-center bg-background px-6 py-6 duration-700 sm:px-8 sm:py-8 md:px-12 md:py-10',
         {
           '!duration-0': visible,
         },
@@ -33,60 +45,47 @@ export const Intro = () => {
         timeout: visible ? 0 : 700,
       }}
     >
-      <div className='flex h-full flex-col items-stretch'>
+      <div className='font-gallery grid h-full min-h-0 w-full max-w-6xl grid-rows-[1fr_auto_1fr]'>
         <div
-          className={cn('h-1/3', {
+          className={cn('min-h-8', {
             'max-lg:landscape:hidden [@media(min-aspect-ratio:2.5)]:hidden':
               !initialPreset,
           })}
         />
-        <div
-          className={cn('flex h-1/3 flex-col items-center justify-center', {
-            'max-lg:landscape:h-1/2 max-lg:landscape:justify-start max-lg:landscape:pt-12 [@media(min-aspect-ratio:2.5)]:h-1/2 [@media(min-aspect-ratio:2.5)]:justify-start [@media(min-aspect-ratio:2.5)]:pt-12':
-              !initialPreset,
-          })}
-        >
-          <h1 className='text-center font-black text-4xl leading-none md:text-5xl md:leading-none'>
-            <span className='inline-flex'>
-              <i>Photo</i>
-            </span>{' '}
-            <span className='relative inline-flex bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent'>
-              <i>Galaxy</i>
+        <div className='flex flex-col items-start justify-center py-8 text-left'>
+          <h1 className='text-balance font-semibold text-4xl leading-none tracking-tighter sm:text-5xl md:text-7xl'>
+            <span className='text-foreground'>Photo </span>
+            <span className='relative inline-flex bg-gradient-to-r from-white to-[#9b9b9b] bg-clip-text text-transparent'>
+              Galaxy
               <span className='absolute bottom-0 left-full after:animate-ellipsis' />
             </span>
           </h1>
-          <p className='mt-3 max-w-sm text-center text-muted-foreground/80 text-sm'>
-            Personal force-directed Voronoi photo exploration universe
+          <p className='mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg'>
+            Explore your photos in a living, spatial gallery.
           </p>
         </div>
-        <div
-          className={cn(
-            'relative flex h-1/3 flex-col items-stretch justify-end gap-4 pb-12',
-            {
-              'max-lg:landscape:h-1/2 max-lg:landscape:pb-6 [@media(min-aspect-ratio:2.5)]:h-1/2':
-                !initialPreset,
-            },
-          )}
-        >
+        <div className='relative flex min-h-0 flex-col items-stretch justify-end gap-4 pb-2 sm:pb-4'>
           <FadeTransition
             visible={!hasDeviceClass}
-            className='absolute inset-x-0 bottom-12 w-full duration-1000 max-md:hidden max-lg:landscape:bottom-6'
+            className='absolute inset-x-0 bottom-2 w-full rounded-2xl border border-white/10 bg-[#181818]/85 p-4 shadow-xl backdrop-blur-xl duration-500 sm:bottom-4 sm:p-6 max-md:hidden'
             transitionOptions={{
               timeout: 500,
             }}
           >
-            <DeviceClassWidget />
+            <DeviceClassWidget className='mx-auto w-full max-w-xl gap-4' />
             <PhotoGalaxyInfo />
           </FadeTransition>
           <FadeTransition
             visible={hasDeviceClass && !preset}
-            className='absolute inset-x-0 bottom-12 w-full duration-1000 max-lg:landscape:bottom-6'
+            className='absolute inset-x-0 bottom-2 w-full rounded-2xl border border-white/10 bg-[#181818]/85 p-4 shadow-xl backdrop-blur-xl duration-500 sm:bottom-4 sm:p-6'
             transitionOptions={{
               timeout: 500,
             }}
           >
             <SmallScreenWarning />
             <CoreSettingsWidget
+              className='mx-auto w-full max-w-xl gap-4'
+              defaultCellLimit={recommendedCellLimit}
               submitLabel='Continue'
               submitVisibility='always'
             />
@@ -99,7 +98,7 @@ export const Intro = () => {
 }
 
 const PhotoGalaxyInfo = () => (
-  <span className='inline-flex text-xxs text-zinc-600 leading-none dark:text-zinc-300'>
+  <span className='mt-3 block text-center text-xs leading-relaxed text-muted-foreground'>
     Your photos stay in this browser &bull; Explore by place, date, and tag
   </span>
 )

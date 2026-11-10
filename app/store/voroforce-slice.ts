@@ -14,7 +14,11 @@ import type {
   VOROFORCE_PRESET,
   VoroforceInstance,
 } from '../vf'
-import { DEFAULT_VOROFORCE_MODE, VOROFORCE_MODE } from '../vf/consts'
+import {
+  DEFAULT_VOROFORCE_MODE,
+  DEFAULT_CELL_LIMIT,
+  VOROFORCE_MODE,
+} from '../vf/consts'
 
 export interface VoroforceSlice {
   ua: UAParser
@@ -50,6 +54,8 @@ export interface VoroforceSlice {
   }
   performanceMonitor?: PerformanceMonitorApi
   setPerformanceMonitor: (performanceMonitor: PerformanceMonitorApi) => void
+  performanceSettingsOpen: boolean
+  setPerformanceSettingsOpen: (open: boolean) => void
 }
 
 export const createEngineSlice: StateCreator<
@@ -102,7 +108,11 @@ export const createEngineSlice: StateCreator<
       updatePersistentSetting('preset', preset)
       set({ preset })
     },
-    cellLimit: persistentSettings.cellLimit,
+    cellLimit:
+      persistentSettings.cellLimit &&
+      persistentSettings.cellLimit <= DEFAULT_CELL_LIMIT
+        ? persistentSettings.cellLimit
+        : DEFAULT_CELL_LIMIT,
     setCellLimit: (cellLimit: CELL_LIMIT) => {
       updatePersistentSetting('cellLimit', cellLimit)
       set({ cellLimit })
@@ -129,5 +139,8 @@ export const createEngineSlice: StateCreator<
     setPerformanceMonitor: (performanceMonitor) => {
       set({ performanceMonitor })
     },
+    performanceSettingsOpen: false,
+    setPerformanceSettingsOpen: (performanceSettingsOpen) =>
+      set({ performanceSettingsOpen }),
   }
 }
