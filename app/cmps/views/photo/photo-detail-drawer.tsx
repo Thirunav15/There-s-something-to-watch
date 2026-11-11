@@ -231,7 +231,7 @@ export const PhotoDetailDrawer = () => {
           onMouseLeave: () => setFreezePhoto(false),
         }),
         className: cn(
-          'group landscape:!max-h-[min(85vh,44rem)] landscape:!w-fit landscape:!min-w-72 landscape:!max-w-[min(90vw,32rem)]',
+          'group z-50 landscape:!max-h-[min(85vh,44rem)] landscape:!w-fit landscape:!min-w-72 landscape:!max-w-[min(90vw,32rem)]',
           {
             'contain-layout contain-paint contain-style':
               !addCustomLinkTypeOpen,
