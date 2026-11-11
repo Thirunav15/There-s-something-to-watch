@@ -361,7 +361,10 @@ export default class Controls extends BaseControls {
   }
 
   onPointerClick(e) {
-    if (this.isPinching) return
+    if (this.isPinching || Date.now() < this.suppressClickUntil) {
+      e.preventDefault()
+      return
+    }
     if (this.pointer.dragging) {
       this.pointer.dragging = false
       return
@@ -549,6 +552,7 @@ export default class Controls extends BaseControls {
 
     // Multi-touch gestures
     if (e.touches.length === 2) {
+      this.suppressClickUntil = Date.now() + 800
       this.handlePinchGesture(e.touches)
     }
 
@@ -563,6 +567,7 @@ export default class Controls extends BaseControls {
 
     // Multi-touch gestures
     if (e.touches.length === 2) {
+      this.suppressClickUntil = Date.now() + 800
       this.handlePinchGesture(e.touches)
     }
 
@@ -598,13 +603,14 @@ export default class Controls extends BaseControls {
           ? Math.min(this.options.zoomMax, this.zoom + deltaScale)
           : Math.max(this.options.zoomMin, this.zoom - deltaScale)
 
-      this.handleZoom(this.zoom)
+      this.handleZoom(this.zoom, true)
     }
 
     this.lastPinchDistance = distance
   }
 
   zoom = 1
+  suppressClickUntil = 0
   onWheel(e) {
     // e.preventDefault()
     this.logger?.debug('onWheel', { deltaY: e.deltaY })
@@ -619,16 +625,18 @@ export default class Controls extends BaseControls {
     this.handleZoom(this.zoom)
   }
 
-  handleZoom(zoom) {
+  handleZoom(zoom, fromPinch = false) {
     this.logger?.debug('zoom', zoom)
     this.pointer.zoom = zoom
 
-    if (!this.hasSelection()) {
-      if (zoom >= this.options.zoomMax) {
-        this.requestSelection(this.pointer)
-      }
-    } else {
-      if (zoom <= this.options.zoomMin) {
+    // Pinch gestures only change the field zoom. Tapping remains the explicit
+    // action that selects or deselects a photo on touch devices.
+    if (!fromPinch) {
+      if (!this.hasSelection()) {
+        if (zoom >= this.options.zoomMax) {
+          this.requestSelection(this.pointer)
+        }
+      } else if (zoom <= this.options.zoomMin) {
         this.deselect()
       }
     }
