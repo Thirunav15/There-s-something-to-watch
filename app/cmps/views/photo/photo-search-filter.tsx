@@ -38,9 +38,6 @@ export const PhotoSearchFilter = () => {
     [photos],
   )
 
-  // Search belongs to the populated galaxy field, not the empty-state screen.
-  if (photos.length === 0) return null
-
   // Filtered photos based on search query and active filter tag
   const filteredPhotos = useMemo(() => {
     let result = photos
@@ -109,6 +106,7 @@ export const PhotoSearchFilter = () => {
   return (
     <div
       ref={containerRef}
+      style={{ display: photos.length === 0 ? 'none' : undefined }}
       className={`font-gallery pointer-events-none fixed top-4 right-4 z-40 flex flex-col items-end gap-3 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:top-6 sm:right-6 ${searchOpen ? 'w-[calc(100vw-2rem)] max-w-sm md:w-96' : 'w-12'}`}
     >
       {!searchOpen ? (
