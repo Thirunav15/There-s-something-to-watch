@@ -55,7 +55,6 @@ export function CoreSettingsWidget({
       innerClassName={cn('flex flex-col gap-4', className)}
     >
       <CellLimitSelector
-        className='max-md:hidden'
         value={cellLimit}
         onValueChange={(value: CELL_LIMIT) => {
           setHasUserSelectedCellLimit(true)

@@ -155,20 +155,18 @@ export const LowFpsAlert = () => {
                 : 'Low FPS detected'}
             </div>
           </div>
-          <p className='inline-flex pb-2 text-base text-zinc-600 max-md:pb-2 dark:text-zinc-300'>
-            <span className='leading-none md:hidden'>
-              {performanceSettingsOpen
-                ? 'Choose a render limit. Fewer cells can improve frame rate while retaining the same Voronoi style.'
-                : 'This page is best viewed on a larger device like a desktop or laptop.'}
-            </span>
-            <span className='max-md:hidden'>
-              {performanceSettingsOpen
-                ? 'Choose a render limit. Fewer cells can improve frame rate while retaining the same Voronoi style.'
-                : canLowerQuality
+          {!performanceSettingsOpen && (
+            <p className='inline-flex pb-2 text-base text-zinc-600 max-md:pb-2 dark:text-zinc-300'>
+              <span className='leading-none md:hidden'>
+                This page is best viewed on a larger device like a desktop or laptop.
+              </span>
+              <span className='max-md:hidden'>
+                {canLowerQuality
                   ? 'Lower the settings?'
                   : "You're already using the lowest settings."}
-            </span>
-          </p>
+              </span>
+            </p>
+          )}
         </div>
         <CoreSettingsWidget onSubmit={() => window.location.reload()} />
         <div className='flex w-full flex-row justify-end gap-3 pt-4 md:gap-6 md:pt-6'>
