@@ -47,7 +47,7 @@ export function DeviceClassSelector({
       </div>
       <Selector
         key={value}
-        className={cn('', className)}
+        className={cn('grid grid-cols-2 gap-2 md:flex md:gap-4', className)}
         defaultValue={String(value)}
         onValueChange={(value) => {
           onValueChange(Number.parseInt(value) as DEVICE_CLASS)

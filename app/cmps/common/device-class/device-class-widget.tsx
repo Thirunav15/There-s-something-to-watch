@@ -17,7 +17,7 @@ export function DeviceClassWidget({
   submitProps,
 }: {
   className?: string
-  onSubmit?: () => void
+  onSubmit?: (deviceClass: DEVICE_CLASS) => void
   submitLabel?: string | ReactNode
   submitProps?: ButtonProps
 }) {
@@ -88,7 +88,7 @@ export function DeviceClassWidget({
             : estimatedDeviceClass
           if (typeof deviceClass === 'number' && deviceClass >= 0) {
             setStoreDeviceClass(deviceClass)
-            onSubmit?.()
+            onSubmit?.(deviceClass)
           }
         }}
         size='lg'

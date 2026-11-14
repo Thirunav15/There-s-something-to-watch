@@ -1,30 +1,23 @@
 import { useEffect, useReducer, useState } from 'react'
 import { useShallowState } from '../../../store'
-import { isDefined } from '../../../utils/misc'
 import { cn } from '../../../utils/tw'
-import { VOROFORCE_MODE } from '../../../vf'
+import { VOROFORCE_MODE, VOROFORCE_PRESET } from '../../../vf'
 import {
   DEFAULT_CELL_LIMIT,
   DEVICE_CLASS_ITEMS,
   OBSCURE_VISUAL_DEFECTS,
 } from '../../../vf/consts'
-import { CoreSettingsWidget } from '../../common/core-settings/core-settings-widget'
 import { DeviceClassWidget } from '../../common/device-class/device-class-widget'
 import { FadeTransition } from '../../common/fade-transition'
-import { SmallScreenWarning } from '../../common/small-screen-warning'
 
 export const Intro = () => {
-  const { preset, hasDeviceClass, recommendedCellLimit } = useShallowState(
-    (state) => {
-      const deviceClass = state.deviceClass ?? state.estimatedDeviceClass
-      return {
-        preset: state.preset,
-        hasDeviceClass: isDefined(state.deviceClass),
-        recommendedCellLimit:
-          DEVICE_CLASS_ITEMS.find((item) => item.id === deviceClass)
-            ?.recommendedCellLimit ?? DEFAULT_CELL_LIMIT,
-      }
-    },
+  const { preset, playedIntro, setPreset, setCellLimit } = useShallowState(
+    (state) => ({
+      preset: state.preset,
+      playedIntro: state.playedIntro,
+      setPreset: state.setPreset,
+      setCellLimit: state.setCellLimit,
+    }),
   )
 
   const [initialPreset] = useState(preset)
@@ -66,28 +59,21 @@ export const Intro = () => {
         </div>
         <div className='relative flex min-h-0 flex-col items-stretch justify-end gap-4 pb-2 sm:pb-4'>
           <FadeTransition
-            visible={!hasDeviceClass}
-            className='absolute inset-x-0 bottom-2 w-full rounded-2xl border border-white/10 bg-[#181818]/85 p-4 shadow-xl backdrop-blur-xl duration-500 sm:bottom-4 sm:p-6 max-md:hidden'
-            transitionOptions={{
-              timeout: 500,
-            }}
-          >
-            <DeviceClassWidget className='mx-auto w-full max-w-xl gap-4' />
-            <PhotoGalaxyInfo />
-          </FadeTransition>
-          <FadeTransition
-            visible={hasDeviceClass && !preset}
+            visible={!preset || !playedIntro}
             className='absolute inset-x-0 bottom-2 w-full rounded-2xl border border-white/10 bg-[#181818]/85 p-4 shadow-xl backdrop-blur-xl duration-500 sm:bottom-4 sm:p-6'
             transitionOptions={{
               timeout: 500,
             }}
           >
-            <SmallScreenWarning />
-            <CoreSettingsWidget
+            <DeviceClassWidget
               className='mx-auto w-full max-w-xl gap-4'
-              defaultCellLimit={recommendedCellLimit}
-              submitLabel='Continue'
-              submitVisibility='always'
+              onSubmit={(deviceClass) => {
+                const recommendedCellLimit =
+                  DEVICE_CLASS_ITEMS.find((item) => item.id === deviceClass)
+                    ?.recommendedCellLimit ?? DEFAULT_CELL_LIMIT
+                setCellLimit(recommendedCellLimit)
+                setPreset(VOROFORCE_PRESET.minimal)
+              }}
             />
             <PhotoGalaxyInfo />
           </FadeTransition>
