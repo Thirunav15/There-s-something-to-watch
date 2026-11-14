@@ -4,14 +4,14 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   
-  <!-- Photo Galaxy interactive personal photo gallery -->
+  <!-- Photo Galaxy - Interactive personal photo gallery -->
   <url>
-    <loc>https://there-s-something-to-watch.thirunav015.workers.dev/</loc>
-    <lastmod>2026-11-07</lastmod>
+    <loc>https://photo-galaxy.nightnightdev.workers.dev/</loc>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
-  <!-- Personal photos are private browser data, not public crawlable pages. -->
+  <!-- Personal photos are stored in each visitor's browser and are not public URLs. -->
   
 </urlset>

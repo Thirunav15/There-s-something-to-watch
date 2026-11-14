@@ -11,7 +11,7 @@ Disallow: /assets/
 # Crawl-delay: 1
 
 # Sitemap location
-Sitemap: https://there-s-something-to-watch.thirunav015.workers.dev/sitemap.xml
+Sitemap: https://photo-galaxy.nightnightdev.workers.dev/sitemap.xml
 # Block known problematic bots (optional)
 # User-agent: SemrushBot
 # Disallow: /

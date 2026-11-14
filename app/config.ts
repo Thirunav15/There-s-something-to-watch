@@ -5,7 +5,7 @@ const env = import.meta.env as unknown as {
 }
 
 export default {
-  sourceCodeUrl: 'https://github.com/Thirunav15/There-s-something-to-watch',
+  sourceCodeUrl: 'https://github.com/Thirunav15/Photo-Galaxy',
   contactEmail: '96j0o1ivb@mozmail.com',
   disableUI: false,
   telemetry: {
