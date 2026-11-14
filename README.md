@@ -2,8 +2,6 @@
 
 Photo Galaxy is a personal photo gallery set inside an immersive, interactive WebGL universe. A dark, minimal visual field, fluid motion, and a force-directed Voronoi layout bring your photos together by memory, place, and tag.
 
-**Live website:** [photo-galaxy.nightnightdev.workers.dev](https://photo-galaxy.nightnightdev.workers.dev)
-
 ## Run locally
 
 Requirements: Node.js 18+ (Bun is also supported) and a browser with WebGL 2.
