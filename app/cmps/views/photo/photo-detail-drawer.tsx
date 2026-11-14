@@ -231,7 +231,7 @@ export const PhotoDetailDrawer = () => {
           onMouseLeave: () => setFreezePhoto(false),
         }),
         className: cn(
-          'group z-50 landscape:!max-h-[min(85vh,44rem)] landscape:!w-fit landscape:!min-w-72 landscape:!max-w-[min(90vw,32rem)]',
+          'group z-50 landscape:!h-auto landscape:!max-h-[min(85vh,44rem)] landscape:!w-fit landscape:!min-w-72 landscape:!max-w-[min(90vw,32rem)]',
           {
             'contain-layout contain-paint contain-style':
               !addCustomLinkTypeOpen,
@@ -241,7 +241,7 @@ export const PhotoDetailDrawer = () => {
       }}
       innerContentProps={{
         className:
-          'relative z-40 flex h-[min(85dvh,44rem)] min-h-0 flex-col overflow-hidden landscape:lg:!h-[min(85dvh,44rem)]',
+          'relative z-40 flex h-auto max-h-[min(90dvh,50rem)] min-h-0 flex-col overflow-hidden landscape:!h-auto',
       }}
       footer={
         mountContent ? (
@@ -265,7 +265,7 @@ export const PhotoDetailDrawer = () => {
         {mountContent && (
           <PhotoView
             photo={photo}
-            className='min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain'
+            className='min-h-0 flex-none overflow-visible'
           />
         )}
       </Suspense>

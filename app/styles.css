@@ -13,6 +13,16 @@
 .font-gallery {
   font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 :root {
   --background: hsl(0 0% 3.9%);
   --foreground: hsl(0 0% 98%);

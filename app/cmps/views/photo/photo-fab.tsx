@@ -21,6 +21,7 @@ export const PhotoFloatingActionOverlay = () => {
     setPendingUploadFile,
     setPendingUploadBatch,
     hasPhotos,
+    favoritesOpen,
     photos,
     deletePhotos,
   } = useShallowState((state) => ({
@@ -28,6 +29,7 @@ export const PhotoFloatingActionOverlay = () => {
       setPendingUploadFile: state.setPendingUploadFile,
       setPendingUploadBatch: state.setPendingUploadBatch,
       hasPhotos: state.photos.length > 0,
+      favoritesOpen: state.favoritesOpen,
       photos: state.photos,
       deletePhotos: state.deletePhotos,
     }))
@@ -74,7 +76,7 @@ export const PhotoFloatingActionOverlay = () => {
         onChange={handleFileSelect}
         className='hidden'
       />
-      {hasPhotos && (
+      {hasPhotos && !favoritesOpen && (
         <div className='font-gallery pointer-events-none fixed right-4 bottom-4 z-40 flex items-center overflow-hidden rounded-full border border-white/15 bg-[#181818]/95 shadow-xl shadow-black/30 backdrop-blur-xl md:right-6 md:bottom-6'>
           <Button
             type='button'

@@ -32,6 +32,13 @@ export const Favorites = () => {
   return (
     <Modal
       rootProps={{ open, onClose: () => setOpen(false) }}
+      contentProps={{
+        className: '!top-32 !bottom-0 !z-50 !h-[calc(100dvh-8rem)]',
+      }}
+      innerContentProps={{ className: 'flex h-full min-h-0 flex-col' }}
+      footerProps={{
+        className: '!static !pointer-events-auto !z-10 shrink-0',
+      }}
       overlay
       footer={
         <div className='flex w-full justify-between gap-3 p-4 md:p-6'>
@@ -52,10 +59,10 @@ export const Favorites = () => {
       }
     >
       <ScrollArea
-        className='w-full bg-background/60'
-        innerClassName='max-h-[calc(100vh-var(--spacing)*12)]'
+        className='min-h-0 flex-1 bg-background/60'
+        innerClassName='h-full max-h-full'
       >
-        <div className='grid min-h-64 w-full grid-cols-1 gap-3 p-4 pb-20 sm:grid-cols-2 md:gap-4 md:p-6 md:pb-24'>
+        <div className='grid w-full grid-cols-1 gap-3 p-4 sm:grid-cols-2 md:gap-4 md:p-6'>
           {favorites.map((photo) => (
             <article
               key={photo.id}

@@ -51,7 +51,7 @@ const createPhotoDraft = (file: File): PhotoDraft => ({
   caption: '',
   location: '',
   date: new Date(file.lastModified || Date.now()).toISOString().split('T')[0],
-  tags: ['Travel', 'Nature'],
+  tags: [],
 })
 
 export const AddPhotoModal = () => {
@@ -90,7 +90,7 @@ export const AddPhotoModal = () => {
   const [caption, setCaption] = useState<string>('')
   const [location, setLocation] = useState<string>('')
   const [date, setDate] = useState<string>('')
-  const [tags, setTags] = useState<string[]>(['Travel', 'Nature'])
+  const [tags, setTags] = useState<string[]>([])
   const [customTagInput, setCustomTagInput] = useState<string>('')
   const [saveError, setSaveError] = useState<string>('')
   const [photoDrafts, setPhotoDrafts] = useState<PhotoDraft[]>([])
@@ -130,7 +130,7 @@ export const AddPhotoModal = () => {
       setDate(fileDate.toISOString().split('T')[0])
       setCaption('')
       setLocation('')
-      setTags(['Travel', 'Nature'])
+      setTags([])
 
       return () => {
         URL.revokeObjectURL(url)
@@ -267,7 +267,7 @@ export const AddPhotoModal = () => {
             imageUrl: await preparePhotoForStorage(file),
             location: draft.location.trim() || undefined,
             date: draft.date || new Date().toISOString().split('T')[0],
-            tags: draft.tags.length > 0 ? draft.tags : ['Uncategorized'],
+            tags: draft.tags,
           })
         }
         const addedPhotos = addPhotos(photosToAdd)
@@ -280,7 +280,7 @@ export const AddPhotoModal = () => {
           imageUrl: await preparePhotoForStorage(file),
           location: location.trim() || undefined,
           date: date || new Date().toISOString().split('T')[0],
-          tags: tags.length > 0 ? tags : ['Uncategorized'],
+          tags,
         }
         created = addPhoto(newPhotoData)
       }
@@ -313,7 +313,7 @@ export const AddPhotoModal = () => {
 
   const photoTabBar = isBatchUpload ? (
     <div className='shrink-0 border-b border-white/10 bg-[#181818] px-5 py-3 sm:px-7'>
-      <div className='flex gap-2 overflow-x-auto'>
+      <div className='no-scrollbar flex gap-2 overflow-x-auto'>
         <div
           role='tablist'
           aria-label='Selected photos'

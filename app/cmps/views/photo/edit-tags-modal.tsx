@@ -1,8 +1,8 @@
 import { useShallowState } from '@/store'
 import { isInputDOMNode } from '@/hooks/use-key-press'
-import { AVAILABLE_TAG_OPTIONS } from '@/vf/utils/photos'
+import { AVAILABLE_TAG_OPTIONS, getPhotoCaption } from '@/vf/utils/photos'
 import { Calendar, Edit3, MapPin, Plus, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Badge } from '../../ui/badge'
 import { Button } from '../../ui/button'
 import {
@@ -30,20 +30,25 @@ export const EditTagsModal = () => {
   )
   const [newTagInput, setNewTagInput] = useState('')
   const [title, setTitle] = useState(activePhoto?.title ?? '')
-  const [caption, setCaption] = useState(activePhoto?.caption ?? '')
+  const [caption, setCaption] = useState(
+    activePhoto ? getPhotoCaption(activePhoto) : '',
+  )
   const [date, setDate] = useState(activePhoto?.date ?? '')
   const [location, setLocation] = useState(activePhoto?.location ?? '')
 
-  // Sync state when modal opens
+  // Refresh every draft when opening the editor or switching to another photo.
+  useEffect(() => {
+    if (!open || !activePhoto) return
+
+    setCurrentTags([...activePhoto.tags])
+    setTitle(activePhoto.title)
+    setCaption(getPhotoCaption(activePhoto))
+    setDate(activePhoto.date ?? '')
+    setLocation(activePhoto.location ?? '')
+    setNewTagInput('')
+  }, [open, activePhoto?.id])
+
   const handleOpenChange = (nextOpen: boolean) => {
-    if (nextOpen && activePhoto) {
-      setCurrentTags([...activePhoto.tags])
-      setTitle(activePhoto.title)
-      setCaption(activePhoto.caption ?? '')
-      setDate(activePhoto.date ?? '')
-      setLocation(activePhoto.location ?? '')
-      setNewTagInput('')
-    }
     setOpen(nextOpen)
   }
 

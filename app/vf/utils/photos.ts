@@ -2,6 +2,8 @@ export interface PhotoNode {
   id: number
   title: string
   caption?: string
+  /** Caption field used by older saved gallery entries. */
+  story?: string
   imageUrl: string
   tags: string[]
   location?: string
@@ -10,6 +12,9 @@ export interface PhotoNode {
   y?: number
   cellId?: number
 }
+
+export const getPhotoCaption = (photo: Pick<PhotoNode, 'caption' | 'story'>) =>
+  photo.caption?.trim() || photo.story?.trim() || ''
 
 export const PHOTO_GALAXY_STORAGE_KEY = 'photo_galaxy_user_nodes_v1'
 export const PHOTO_GALAXY_FAVORITES_KEY = 'photo_galaxy_favorites_v1'
